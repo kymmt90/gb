@@ -6,6 +6,10 @@ mod indirect;
 mod reg16;
 mod reg8;
 
+pub use imm16::Imm16;
+pub use imm8::Imm8;
+pub use reg16::Reg16;
+
 use crate::peripherals::Peripherals;
 
 pub trait IO8<T: Copy> {
