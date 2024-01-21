@@ -1,3 +1,4 @@
+mod cond;
 mod direct16;
 mod direct8;
 mod imm16;
@@ -6,6 +7,7 @@ mod indirect;
 mod reg16;
 mod reg8;
 
+pub use cond::Cond;
 pub use imm16::Imm16;
 pub use imm8::Imm8;
 pub use reg16::Reg16;
@@ -41,11 +43,3 @@ macro_rules! go {
 
 pub(crate) use go;
 pub(crate) use step;
-
-#[derive(Debug, Copy, Clone)]
-pub enum Cond {
-    NZ,
-    Z,
-    NC,
-    C,
-}
