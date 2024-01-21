@@ -18,7 +18,7 @@ impl Ret for Cpu {
             0: if let Some(v) = self.pop16(bus) {
                 self.regs.pc = v;
 
-                return go!(1);
+                go!(1);
             },
             1: {
                 go!(0);

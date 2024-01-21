@@ -80,7 +80,12 @@ impl IO8<Indirect> for Cpu {
 
                     return None;
                 },
-                1: #[allow(clippy::needless_return)] return Some(go!(0)),
+                1: {
+                    go!(0);
+
+                    #[allow(clippy::needless_return)]
+                    return Some(());
+                },
             }
         );
     }

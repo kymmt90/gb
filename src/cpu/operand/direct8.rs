@@ -78,7 +78,12 @@ impl IO8<Direct8> for Cpu {
 
                     return None;
                 },
-                3: #[allow(clippy::needless_return)] return Some(go!(0)),
+                3: {
+                    go!(0);
+
+                    #[allow(clippy::needless_return)]
+                    return Some(());
+                },
             }
         );
     }

@@ -37,7 +37,12 @@ impl Push for Cpu {
 
                 return None;
             },
-            3: return Some(go!(0)),
+            3: {
+                go!(0);
+
+                #[allow(clippy::needless_return)]
+                return Some(());
+            },
         });
     }
 

@@ -42,7 +42,12 @@ impl IO16<Direct16> for Cpu {
 
                     return None;
                 },
-                4: #[allow(clippy::needless_return)] return Some(go!(0)),
+                4: {
+                    go!(0);
+
+                    #[allow(clippy::needless_return)]
+                    return Some(());
+                },
             }
         );
     }
