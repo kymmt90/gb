@@ -3,7 +3,7 @@ use crate::{
     peripherals::Peripherals,
 };
 
-trait Bit {
+pub trait Bit {
     fn bit<S: Copy>(&mut self, bus: &mut Peripherals, bit: usize, src: S)
     where
         Self: IO8<S>;

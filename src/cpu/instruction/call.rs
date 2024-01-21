@@ -8,7 +8,7 @@ use crate::{
 };
 use std::sync::atomic::{AtomicU16, AtomicU8, Ordering::Relaxed};
 
-trait Call {
+pub trait Call {
     fn call(&mut self, bus: &mut Peripherals);
 }
 

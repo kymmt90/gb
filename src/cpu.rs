@@ -1,8 +1,10 @@
+mod decode;
 mod instruction;
 mod operand;
 mod registers;
 
 use crate::peripherals::Peripherals;
+use decode::Decode as _;
 
 #[derive(Debug, Default)]
 struct Ctx {
@@ -21,20 +23,9 @@ impl Cpu {
         self.decode(bus);
     }
 
-    pub fn decode(&mut self, bus: &Peripherals) {
-        match self.ctx.opcode {
-            0x00 => self.nop(bus),
-            _ => panic!("Unimplemented opcode: {:#02x}", self.ctx.opcode),
-        }
-    }
-
     pub fn fetch(&mut self, bus: &Peripherals) {
         self.ctx.opcode = bus.read(self.regs.pc);
         self.regs.pc = self.regs.pc.wrapping_add(1);
         self.ctx.cb = false;
-    }
-
-    fn nop(&mut self, bus: &Peripherals) {
-        self.fetch(bus);
     }
 }

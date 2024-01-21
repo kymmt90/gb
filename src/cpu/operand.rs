@@ -8,9 +8,13 @@ mod reg16;
 mod reg8;
 
 pub use cond::Cond;
+pub use direct16::Direct16;
+pub use direct8::Direct8;
 pub use imm16::Imm16;
 pub use imm8::Imm8;
+pub use indirect::Indirect;
 pub use reg16::Reg16;
+pub use reg8::Reg8;
 
 use crate::peripherals::Peripherals;
 

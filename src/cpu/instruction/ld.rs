@@ -7,7 +7,7 @@ use crate::{
 };
 use std::sync::atomic::{AtomicU16, AtomicU8, Ordering::Relaxed};
 
-trait Ld {
+pub trait Ld {
     fn ld<D: Copy, S: Copy>(&mut self, bus: &mut Peripherals, dst: D, src: S)
     where
         Self: IO8<D> + IO8<S>;

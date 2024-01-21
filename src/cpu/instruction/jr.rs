@@ -7,7 +7,7 @@ use crate::{
 };
 use std::sync::atomic::{AtomicU16, AtomicU8, Ordering::Relaxed};
 
-trait Jr {
+pub trait Jr {
     fn jr(&mut self, bus: &mut Peripherals);
     fn jr_c(&mut self, bus: &mut Peripherals, c: Cond);
     fn cond(&self, cond: Cond) -> bool;

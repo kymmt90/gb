@@ -3,7 +3,7 @@ use crate::{
     peripherals::Peripherals,
 };
 
-trait Cp {
+pub trait Cp {
     fn cp<S: Copy>(&mut self, bus: &mut Peripherals, src: S)
     where
         Self: IO8<S>;
