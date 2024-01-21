@@ -21,7 +21,7 @@ impl Push for Cpu {
                 return None;
             },
             1: {
-                let [lo, hi] = u16::to_le_bytes(val);
+                let [_, hi] = u16::to_le_bytes(val);
                 self.regs.sp = self.regs.sp.wrapping_sub(1);
                 bus.write(self.regs.sp, hi);
 
