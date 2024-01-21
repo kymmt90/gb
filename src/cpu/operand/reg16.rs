@@ -3,6 +3,7 @@ use crate::{
     peripherals::Peripherals,
 };
 
+#[allow(dead_code)]
 #[derive(Debug, Copy, Clone)]
 pub enum Reg16 {
     AF,

@@ -7,6 +7,8 @@ use crate::{
 };
 use std::sync::atomic::{AtomicU16, AtomicU8, Ordering::Relaxed};
 
+#[allow(clippy::upper_case_acronyms)]
+#[allow(dead_code)]
 #[derive(Debug, Copy, Clone)]
 pub enum Direct8 {
     D,
