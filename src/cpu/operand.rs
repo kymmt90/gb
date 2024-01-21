@@ -43,25 +43,6 @@ pub(crate) use go;
 pub(crate) use step;
 
 #[derive(Debug, Copy, Clone)]
-pub enum Indirect {
-    BC,
-    DE,
-    HL,
-    CFF,
-    HLD,
-    HLI,
-}
-
-#[derive(Debug, Copy, Clone)]
-pub enum Direct8 {
-    D,
-    DFF,
-}
-
-#[derive(Debug, Copy, Clone)]
-pub struct Direct16;
-
-#[derive(Debug, Copy, Clone)]
 pub enum Cond {
     NZ,
     Z,
