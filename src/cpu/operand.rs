@@ -31,7 +31,10 @@ macro_rules! step {
         static VAL8: AtomicU8 = AtomicU8::new(0);
         #[allow(dead_code)]
         static VAL16: AtomicU16 = AtomicU16::new(0);
-        $(if STEP.load(Relaxed) == $c { $e })* else { return $d; }
+        $(if STEP.load(Relaxed) == $c { $e })* else {
+            #[allow(clippy::unused_unit)]
+            return $d;
+        }
     };
 }
 
