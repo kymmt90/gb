@@ -1,6 +1,10 @@
-use crate::boot_rom::BootRom;
-use crate::high_ram::HighRam;
-use crate::work_ram::WorkRam;
+mod boot_rom;
+mod high_ram;
+mod work_ram;
+
+use boot_rom::BootRom;
+use high_ram::HighRam;
+use work_ram::WorkRam;
 
 pub struct Peripherals {
     boot_rom: BootRom,
