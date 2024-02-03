@@ -3,7 +3,7 @@ mod high_ram;
 mod ppu;
 mod work_ram;
 
-use boot_rom::BootRom;
+pub use boot_rom::BootRom;
 use high_ram::HighRam;
 use ppu::Ppu;
 use work_ram::WorkRam;
@@ -23,6 +23,10 @@ impl Peripherals {
             high_ram: HighRam::new(),
             ppu: Ppu::new(),
         }
+    }
+
+    pub fn emulate_ppu_cycle(&mut self) -> bool {
+        todo!()
     }
 
     pub fn read(&self, addr: u16) -> u8 {

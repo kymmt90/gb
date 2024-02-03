@@ -19,6 +19,10 @@ pub struct Cpu {
 }
 
 impl Cpu {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn emulate_cycle(&mut self, bus: &mut Peripherals) {
         self.decode(bus);
     }

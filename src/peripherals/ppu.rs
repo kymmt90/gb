@@ -53,6 +53,10 @@ impl Ppu {
         }
     }
 
+    pub fn emulate_cycle(&mut self) -> bool {
+        todo!()
+    }
+
     pub fn read(&self, addr: u16) -> u8 {
         match addr {
             0x8000..=0x9fff => {
