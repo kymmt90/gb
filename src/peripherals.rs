@@ -26,7 +26,7 @@ impl Peripherals {
     }
 
     pub fn emulate_ppu_cycle(&mut self) -> bool {
-        todo!()
+        self.ppu.emulate_cycle()
     }
 
     pub fn read(&self, addr: u16) -> u8 {

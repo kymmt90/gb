@@ -14,6 +14,8 @@ pub struct Ppu {
     wx: u8,
     vram: Box<[u8; 0x2000]>,
     oam: Box<[u8; 0xA0]>,
+    buffer: Box<[u8; LCD_WIDTH * LCD_HEIGHT]>,
+    cycles: u8,
 }
 
 // LCDC register bits
@@ -33,6 +35,9 @@ const VBLANK_INTERRUPT: u8 = 1 << 4;
 const HBLANK_INTERRUPT: u8 = 1 << 3;
 const LYC_EQ_LY: u8 = 1 << 2;
 
+const LCD_HEIGHT: usize = 144;
+const LCD_WIDTH: usize = 160;
+
 impl Ppu {
     pub fn new() -> Self {
         Self {
@@ -50,11 +55,111 @@ impl Ppu {
             wx: 0,
             vram: Box::new([0; 0x2000]),
             oam: Box::new([0; 0xA0]),
+            buffer: Box::new([0; LCD_WIDTH * LCD_HEIGHT]),
+            cycles: 0,
         }
     }
 
     pub fn emulate_cycle(&mut self) -> bool {
-        todo!()
+        if self.lcdc & PPU_ENABLED == 0 {
+            return false;
+        }
+
+        self.cycles -= 1;
+        if self.cycles > 0 {
+            return false;
+        }
+
+        let mut ret = false;
+        match self.mode {
+            Mode::AwaitingHBlank => {
+                self.ly += 1;
+                if self.ly < LCD_WIDTH as u8 {
+                    self.mode = Mode::ScanningOam;
+                    self.cycles = 20;
+                } else {
+                    self.mode = Mode::AwaitingVBlank;
+                    self.cycles = 114;
+                }
+                self.check_lyc_eq_ly();
+            }
+            Mode::AwaitingVBlank => {
+                self.ly += 1;
+                if self.ly > 153 {
+                    ret = true;
+                    self.ly = 0;
+                    self.mode = Mode::ScanningOam;
+                    self.cycles = 20;
+                } else {
+                    self.cycles = 114;
+                }
+                self.check_lyc_eq_ly();
+            }
+            Mode::ScanningOam => {
+                self.mode = Mode::Drawing;
+                self.cycles = 43;
+            }
+            Mode::Drawing => {
+                self.render_bg();
+                self.mode = Mode::AwaitingHBlank;
+                self.cycles = 51;
+            }
+        }
+
+        ret
+    }
+
+    fn check_lyc_eq_ly(&mut self) {
+        if self.ly == self.lyc {
+            self.stat |= LYC_EQ_LY;
+        } else {
+            self.stat &= !LYC_EQ_LY;
+        }
+    }
+
+    fn get_pixel_from_tile(&self, title_idx: usize, row: u8, col: u8) -> u8 {
+        let r = (row * 2) as usize;
+        let c = (7 - col) as usize;
+        let tile_addr = title_idx << 4;
+        let low = self.vram[(tile_addr | r) & 0x1fff];
+        let high = self.vram[(tile_addr | (r + 1)) & 0x1fff];
+
+        ((low >> c) & 1) | (((high >> c) & 1) << 1)
+    }
+
+    fn get_tile_idx_from_tile_map(&self, tile_map: bool, row: u8, col: u8) -> usize {
+        let start_addr: usize = 0x1800 | ((tile_map as usize) << 10);
+        let ret = self.vram[start_addr | (((row as usize) << 5) + col as usize)];
+
+        if self.lcdc & TILE_DATA_ADDRESSING_MODE > 0 {
+            ret as usize
+        } else {
+            ((ret as i8 as i16) + 0x100) as usize
+        }
+    }
+
+    fn render_bg(&mut self) {
+        if self.lcdc & BG_WINDOW_ENABLED == 0 {
+            return;
+        }
+
+        let y = self.ly.wrapping_add(self.scy);
+        for i in 0..LCD_WIDTH {
+            let x = (i as u8).wrapping_add(self.scx);
+
+            let tile_idx =
+                self.get_tile_idx_from_tile_map(self.lcdc & BG_TILE_MAP > 0, y >> 3, x >> 3);
+
+            let pixel = self.get_pixel_from_tile(tile_idx, y & 7, x & 7);
+
+            self.buffer[LCD_WIDTH * self.ly as usize + i] = match (self.bgp >> (pixel << 1)) & 0b11
+            {
+                0b00 => 0xff,
+                0b01 => 0xaa,
+                0b10 => 0x55,
+                _ => 0x00,
+            };
+        }
     }
 
     pub fn read(&self, addr: u16) -> u8 {
