@@ -1,3 +1,5 @@
+use crate::lcd::{LCD_HEIGHT, LCD_WIDTH};
+
 #[derive(Debug)]
 pub struct Ppu {
     mode: Mode,
@@ -34,9 +36,6 @@ const OAM_INTERRUPT: u8 = 1 << 5;
 const VBLANK_INTERRUPT: u8 = 1 << 4;
 const HBLANK_INTERRUPT: u8 = 1 << 3;
 const LYC_EQ_LY: u8 = 1 << 2;
-
-const LCD_HEIGHT: usize = 144;
-const LCD_WIDTH: usize = 160;
 
 impl Ppu {
     pub fn new() -> Self {
@@ -160,6 +159,13 @@ impl Ppu {
                 _ => 0x00,
             };
         }
+    }
+
+    pub fn pixel_buffer(&self) -> Box<[u8]> {
+        self.buffer
+            .iter()
+            .flat_map(|&e| std::iter::repeat(e).take(3))
+            .collect::<Box<[u8]>>()
     }
 
     pub fn read(&self, addr: u16) -> u8 {

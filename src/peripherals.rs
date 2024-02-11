@@ -29,6 +29,10 @@ impl Peripherals {
         self.ppu.emulate_cycle()
     }
 
+    pub fn pixel_buffer(&self) -> Box<[u8]> {
+        self.ppu.pixel_buffer()
+    }
+
     pub fn read(&self, addr: u16) -> u8 {
         match addr {
             0x0000..=0x00ff => {
