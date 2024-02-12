@@ -34,7 +34,7 @@ impl Dec for Cpu {
 
                 go!(1);
             },
-            1: if self.write8(bus, src, VAL8.load(Relaxed).wrapping_sub(1)).is_some() {
+            1: if self.write8(bus, src, VAL8.load(Relaxed)).is_some() {
                 go!(0);
 
                 self.fetch(bus);
@@ -52,7 +52,7 @@ impl Dec for Cpu {
 
                 go!(1);
             },
-            1: if self.write16(bus, src, VAL16.load(Relaxed).wrapping_sub(1)).is_some() {
+            1: if self.write16(bus, src, VAL16.load(Relaxed)).is_some() {
                 go!(2);
             },
             2: {
