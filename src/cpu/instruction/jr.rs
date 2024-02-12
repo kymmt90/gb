@@ -49,7 +49,7 @@ impl Jr for Cpu {
 
     fn cond(&self, cond: Cond) -> bool {
         match cond {
-            Cond::NZ => !self.regs.nf(),
+            Cond::NZ => !self.regs.zf(),
             Cond::Z => self.regs.zf(),
             Cond::NC => !self.regs.cf(),
             Cond::C => self.regs.cf(),
